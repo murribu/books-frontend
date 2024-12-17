@@ -14,10 +14,11 @@ phases:
     commands:
       - export PROJECT_NAME=Books
       - npm install --global yarn
+  build:
+    on-failure: RETRY-3
+    commands:
       - chmod +x bash/makeConfig.sh
       - bash/makeConfig.sh
-  pre_build:
-    commands:
       - yarn
       - cd cdk
       - yarn
@@ -25,13 +26,10 @@ phases:
       - yarn build
       - cd cdk
       - yarn build
-  build:
-    commands:
       - npx cdk synth BooksHosting
       - npx cdk deploy BooksHosting --require-approval never
       - aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
-  post_build:
-    commands:
+    finally:
       - echo Build completed on `date`
 artifacts:
   files:
