@@ -1,24 +1,18 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { FeatureCollection } from "geojson";
+import "./App.css";
+import { Map } from "./Map";
+import rawdata from "./TN_counties.json";
 
+const data = rawdata as FeatureCollection;
 function App() {
+  console.log("data", data);
+  const numData = [
+    { code: "47065", value: 100 },
+    { code: "47115", value: 500 },
+  ];
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Map data={data} width={700} height={400} numData={numData} />
     </div>
   );
 }

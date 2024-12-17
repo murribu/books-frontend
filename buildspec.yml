@@ -1,0 +1,41 @@
+version: 0.2
+
+env:
+  secrets-manager:
+    DISTRIBUTION_ID: Books:DISTRIBUTION_ID
+    API_URL: Books:API_URL
+    API_KEY: Books:API_KEY
+    CERT_ARN: Books:CERT_ARN
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 22
+  pre_build:
+    commands:
+      - export PROJECT_NAME=Books
+      - npm install --global yarn
+      - chmod +x bash/makeConfig.sh
+      - bash/makeConfig.sh
+      - yarn
+      - wait $!
+      - cd cdk
+      - yarn
+      - wait $!
+      - cd ..
+      - yarn build
+      - wait $!
+      - cd cdk
+      - yarn build
+      - wait $!
+  build:
+    commands:
+      - npx cdk deploy BooksHosting --require-approval never
+      - wait $!
+  post_build:
+    commands:
+      - aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
+      - echo Build completed on `date`
+artifacts:
+  files:
+    - "**/*"
