@@ -26,8 +26,8 @@ phases:
       - yarn build
       - cd cdk
       - yarn build
-      - npx cdk synth BooksHosting
-      - npx cdk deploy BooksHosting --require-approval never
+      - yarn synth
+      - yarn deploy
       - aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
     finally:
       - echo Build completed on `date`
