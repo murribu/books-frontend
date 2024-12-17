@@ -28,6 +28,7 @@ phases:
   build:
     commands:
       - npx cdk deploy BooksHosting --require-approval never
+      - wait $!
       - aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
   post_build:
     commands:
