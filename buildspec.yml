@@ -11,30 +11,26 @@ phases:
   install:
     runtime-versions:
       nodejs: 22
-  pre_build:
     commands:
       - export PROJECT_NAME=Books
       - npm install --global yarn
       - chmod +x bash/makeConfig.sh
       - bash/makeConfig.sh
+  pre_build:
+    commands:
       - yarn
-      - wait $!
       - cd cdk
       - yarn
-      - wait $!
       - cd ..
       - yarn build
-      - wait $!
       - cd cdk
       - yarn build
-      - wait $!
   build:
     commands:
       - npx cdk deploy BooksHosting --require-approval never
-      - wait $!
+      - aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
   post_build:
     commands:
-      - aws cloudfront create-invalidation --distribution-id $DISTRIBUTION_ID --paths "/*"
       - echo Build completed on `date`
 artifacts:
   files:
