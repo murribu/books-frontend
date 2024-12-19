@@ -15,7 +15,6 @@ phases:
       - export PROJECT_NAME=Books
       - npm install --global yarn
   build:
-    on-failure: RETRY-3
     commands:
       - chmod +x bash/makeConfig.sh
       - bash/makeConfig.sh
